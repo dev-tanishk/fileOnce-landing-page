@@ -6,7 +6,7 @@ export default function Footer() {
           {/* Logo and tagline */}
           <div>
             <a href="#" className="flex items-center gap-2.5">
-              <img src="/fileonce-landing/logo.png" alt="FileOnce" className="w-10 h-10 object-contain" />
+              <img src="/logo.png" alt="FileOnce" className="w-10 h-10 object-contain" />
               <span className="text-lg font-bold text-white tracking-tight">
                 File<span className="text-primary-400">Once</span>
               </span>

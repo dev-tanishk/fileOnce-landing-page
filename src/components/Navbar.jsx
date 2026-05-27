@@ -29,7 +29,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2.5 group">
-            <img src="/fileonce-landing/logo.png" alt="FileOnce" className="w-14 h-14 object-contain" />
+            <img src="/logo.png" alt="FileOnce" className="w-14 h-14 object-contain" />
             <span className="text-xl font-bold text-surface-900 tracking-tight">
               File<span className="text-primary-600">Once</span>
             </span>

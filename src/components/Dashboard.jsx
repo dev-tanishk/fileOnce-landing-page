@@ -16,7 +16,7 @@ export default function Dashboard() {
           {/* Top Bar */}
           <div className="flex items-center justify-between px-5 py-3 bg-surface-50 border-b border-surface-200">
             <div className="flex items-center gap-3">
-              <img src="/fileonce-landing/logo.png" alt="FileOnce" className="w-7 h-7 object-contain" />
+              <img src="/logo.png" alt="FileOnce" className="w-7 h-7 object-contain" />
               <span className="text-sm font-semibold text-surface-800">FileOnce Dashboard</span>
             </div>
             <div className="flex items-center gap-2">
