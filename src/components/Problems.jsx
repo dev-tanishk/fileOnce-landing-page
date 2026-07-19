@@ -37,11 +37,12 @@ export default function Problems() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-xs font-semibold tracking-widest text-danger uppercase">The Problem</span>
-          <h2 className="mt-3 text-2xl sm:text-3xl font-bold text-surface-900 tracking-tight">
+          <h2 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-bold text-surface-900 tracking-tight">
             Compliance Teams Are Drowning in Manual Work
           </h2>
-          <p className="mt-3 text-surface-500 text-sm sm:text-base">
-            Most firms still rely on spreadsheets, WhatsApp messages, and manual follow-ups to manage compliance requests.
+          <p className="mt-4 text-surface-500 text-sm sm:text-base leading-relaxed">
+            The average compliance firm loses dozens of hours every month to document chasing,
+            missed follow-ups, and spreadsheet archaeology. Sound familiar?
           </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">

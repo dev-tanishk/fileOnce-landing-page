@@ -1,3 +1,6 @@
+import { Link } from 'react-router-dom'
+import { EARLY_ACCESS_PATH } from '../constants/app'
+
 export default function CTA() {
   return (
     <section id="cta" className="py-16 sm:py-24">
@@ -14,25 +17,26 @@ export default function CTA() {
                 Spend More Time Growing Your Practice.
               </span>
             </h2>
-            <p className="mt-4 text-surface-400 text-sm sm:text-base max-w-lg mx-auto">
-              Join compliance teams who've replaced spreadsheet chaos with streamlined requests. See FileOnce in action.
+            <p className="mt-4 text-surface-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+              Join the compliance professionals replacing spreadsheet chaos with a purpose-built
+              operations platform. Early Access includes full Enterprise features at launch pricing.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a
-                href="mailto:tanishk.tripathi@fileonce.in?subject=Demo%20Request"
+              <Link
+                to={EARLY_ACCESS_PATH}
                 className="inline-flex items-center px-7 py-3.5 text-sm font-semibold text-surface-900 bg-white rounded-xl hover:bg-surface-100 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
-                Schedule Demo
+                Get Early Access
                 <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </a>
-              <a
-                href="mailto:tanishk.tripathi@fileonce.in"
+              </Link>
+              <Link
+                to="/contact#demo"
                 className="inline-flex items-center px-6 py-3 text-sm font-medium text-surface-300 border border-surface-700 rounded-xl hover:border-surface-500 hover:text-white transition-colors"
               >
-                Contact Sales
-              </a>
+                Book a demo
+              </Link>
             </div>
           </div>
         </div>

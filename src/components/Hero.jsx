@@ -1,3 +1,7 @@
+import { Link } from 'react-router-dom'
+import { EARLY_ACCESS_PATH } from '../constants/app'
+import { platformTagline } from '../constants/features'
+
 export default function Hero() {
   return (
     <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-24 overflow-hidden">
@@ -11,37 +15,35 @@ export default function Hero() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-primary-50 border border-primary-200 rounded-full text-sm font-semibold text-primary-700 mb-6 animate-fade-in-up">
             <span className="w-2 h-2 bg-primary-500 rounded-full animate-subtle-pulse" />
-            Built for Indian CS & Compliance Firms
+            Built for Compliance Professionals
           </div>
 
           {/* Headline */}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-surface-900 leading-tight tracking-tight animate-fade-in-up animation-delay-100">
-            Track Compliance Requests.{' '}
+            The Compliance Operations Platform{' '}
             <br className="hidden sm:block" />
-            Collect Documents.{' '}
             <span className="bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-              Never Miss Deadlines.
+              Indian Firms Deserve.
             </span>
           </h1>
 
           {/* Subheadline */}
           <p className="mt-5 text-base sm:text-lg text-surface-500 leading-relaxed max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
-            FileOnce helps CS and compliance firms streamline request tracking, automate
-            document collection and reminders, reduce manual follow-ups, and handle more
-            clients efficiently.
+            {platformTagline} Track every request, collect documents effortlessly,
+            and automate client follow-ups — so your team spends time on compliance, not coordination.
           </p>
 
           {/* CTAs */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-in-up animation-delay-300">
-            <a
-              href="#cta"
+            <Link
+              to={EARLY_ACCESS_PATH}
               className="inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
             >
-              Book Demo
+              Get Early Access
               <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
-            </a>
+            </Link>
             <a
               href="#workflow"
               className="inline-flex items-center px-6 py-3 text-sm font-semibold text-surface-700 bg-white border border-surface-200 rounded-xl hover:border-surface-300 hover:bg-surface-50 transition-all duration-200"

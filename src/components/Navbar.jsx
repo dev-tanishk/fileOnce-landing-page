@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { EARLY_ACCESS_PATH } from '../constants/app'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const location = useLocation()
+  const isHome = location.pathname === '/'
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -11,50 +15,52 @@ export default function Navbar() {
   }, [])
 
   const navLinks = [
-    { label: 'Features', href: '#features' },
-    { label: 'How It Works', href: '#workflow' },
-    { label: 'Dashboard', href: '#dashboard' },
-    { label: 'Contact', href: '#footer' },
+    { label: 'Features', href: '/#features' },
+    { label: 'How It Works', href: '/#workflow' },
+    { label: 'Pricing', href: '/#pricing' },
+    { label: 'Plans & Demo', to: '/contact#plans' },
   ]
+
+  const linkClass =
+    'text-sm font-medium text-surface-500 hover:text-surface-900 transition-colors duration-200'
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
+        scrolled || !isHome
           ? 'bg-white/90 backdrop-blur-md shadow-sm border-b border-surface-200/60'
           : 'bg-transparent'
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-2.5 group">
+          <Link to="/" className="flex items-center gap-2.5 group">
             <img src="/logo.png" alt="FileOnce" className="w-14 h-14 object-contain" />
             <span className="text-xl font-bold text-surface-900 tracking-tight">
               File<span className="text-primary-600">Once</span>
             </span>
-          </a>
+          </Link>
 
-          {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-surface-500 hover:text-surface-900 transition-colors duration-200"
-              >
-                {link.label}
-              </a>
-            ))}
-            <a
-              href="#cta"
+            {navLinks.map((link) =>
+              link.to ? (
+                <Link key={link.label} to={link.to} className={linkClass}>
+                  {link.label}
+                </Link>
+              ) : (
+                <a key={link.href} href={link.href} className={linkClass}>
+                  {link.label}
+                </a>
+              ),
+            )}
+            <Link
+              to={EARLY_ACCESS_PATH}
               className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-all duration-200 shadow-sm hover:shadow-md"
             >
-              Book Demo
-            </a>
+              Get Early Access
+            </Link>
           </div>
 
-          {/* Mobile Hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden p-2 text-surface-600 hover:text-surface-900 transition-colors"
@@ -77,28 +83,38 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {mobileOpen && (
           <div className="md:hidden pb-4 border-t border-surface-200/60 bg-white/95 backdrop-blur-md rounded-b-xl">
             <div className="flex flex-col gap-1 pt-3">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="px-4 py-2.5 text-sm font-medium text-surface-600 hover:text-surface-900 hover:bg-surface-50 rounded-lg transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) =>
+                link.to ? (
+                  <Link
+                    key={link.label}
+                    to={link.to}
+                    onClick={() => setMobileOpen(false)}
+                    className="px-4 py-2.5 text-sm font-medium text-surface-600 hover:text-surface-900 hover:bg-surface-50 rounded-lg transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="px-4 py-2.5 text-sm font-medium text-surface-600 hover:text-surface-900 hover:bg-surface-50 rounded-lg transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                ),
+              )}
               <div className="px-4 pt-2">
-                <a
-                  href="#cta"
+                <Link
+                  to={EARLY_ACCESS_PATH}
                   onClick={() => setMobileOpen(false)}
                   className="block w-full text-center px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
                 >
-                  Book Demo
-                </a>
+                  Get Early Access
+                </Link>
               </div>
             </div>
           </div>

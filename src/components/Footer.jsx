@@ -1,38 +1,56 @@
+import { Link } from 'react-router-dom'
+import { SALES_EMAIL, SUPPORT_EMAIL } from '../constants/emails'
+
 export default function Footer() {
   return (
     <footer id="footer" className="bg-surface-900 border-t border-surface-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid sm:grid-cols-2 gap-8 items-start">
-          {/* Logo and tagline */}
           <div>
-            <a href="#" className="flex items-center gap-2.5">
+            <Link to="/" className="flex items-center gap-2.5">
               <img src="/logo.png" alt="FileOnce" className="w-10 h-10 object-contain" />
               <span className="text-lg font-bold text-white tracking-tight">
                 File<span className="text-primary-400">Once</span>
               </span>
-            </a>
+            </Link>
             <p className="mt-4 text-sm text-surface-300 leading-relaxed max-w-sm">
-              Compliance request and document collection platform built for{' '}
-              <span className="text-primary-400 font-medium">Indian CS professionals</span> and{' '}
-              <span className="text-primary-400 font-medium">compliance teams</span>.
+              Compliance request and document collection platform for{' '}
+              <span className="text-primary-400 font-medium">compliance professionals</span>{' '}
+              and teams across India.
             </p>
           </div>
 
-          {/* Contact & Links */}
           <div className="flex flex-col gap-5">
-            {/* Contact Info */}
             <div className="bg-surface-800 rounded-xl p-4 border border-surface-700">
-              <p className="text-[11px] font-semibold tracking-widest text-surface-400 uppercase mb-3">Get in Touch</p>
+              <p className="text-[11px] font-semibold tracking-widest text-surface-400 uppercase mb-3">
+                Get in Touch
+              </p>
               <div className="space-y-2.5">
-                <a href="mailto:tanishk.tripathi@fileonce.in" className="flex items-center gap-3 group">
+                <a href={`mailto:${SALES_EMAIL}`} className="flex items-center gap-3 group">
                   <div className="w-8 h-8 bg-primary-500/15 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg className="w-4 h-4 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                     </svg>
                   </div>
-                  <span className="text-sm font-medium text-surface-200 group-hover:text-primary-400 transition-colors">
-                    tanishk.tripathi@fileonce.in
-                  </span>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wide text-surface-500">Sales</p>
+                    <span className="text-sm font-medium text-surface-200 group-hover:text-primary-400 transition-colors">
+                      {SALES_EMAIL}
+                    </span>
+                  </div>
+                </a>
+                <a href={`mailto:${SUPPORT_EMAIL}`} className="flex items-center gap-3 group">
+                  <div className="w-8 h-8 bg-primary-500/15 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wide text-surface-500">Support</p>
+                    <span className="text-sm font-medium text-surface-200 group-hover:text-primary-400 transition-colors">
+                      {SUPPORT_EMAIL}
+                    </span>
+                  </div>
                 </a>
                 <a href="tel:+917309301632" className="flex items-center gap-3 group">
                   <div className="w-8 h-8 bg-primary-500/15 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -47,13 +65,15 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Legal Links */}
             <div className="flex items-center gap-5">
+              <Link to="/contact#plans" className="text-xs text-surface-400 hover:text-primary-400 transition-colors">
+                Plans &amp; Demo
+              </Link>
               <a href="#" className="text-xs text-surface-400 hover:text-primary-400 transition-colors">
                 Privacy Policy
               </a>
               <a href="#" className="text-xs text-surface-400 hover:text-primary-400 transition-colors">
-                Terms & Conditions
+                Terms &amp; Conditions
               </a>
             </div>
           </div>

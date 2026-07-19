@@ -4,11 +4,13 @@ export default function Dashboard() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-xs font-semibold tracking-widest text-primary-600 uppercase">Dashboard</span>
-          <h2 className="mt-3 text-2xl sm:text-3xl font-bold text-surface-900 tracking-tight">
+          <h2 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-bold text-surface-900 tracking-tight">
             Your Compliance Command Center
           </h2>
-          <p className="mt-3 text-surface-500 text-sm sm:text-base">
-            One centralized view to monitor every request, deadline, and document across all your clients.
+          <p className="mt-4 text-surface-500 text-sm sm:text-base leading-relaxed">
+            Real-time operational intelligence across your entire client portfolio. Active requests,
+            overdue alerts, pending uploads, and reminder activity — unified in a single,
+            executive-grade dashboard built for decision-makers.
           </p>
         </div>
 
