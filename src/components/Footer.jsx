@@ -3,7 +3,7 @@ import { SALES_EMAIL, SUPPORT_EMAIL } from '../constants/emails'
 
 export default function Footer() {
   return (
-    <footer id="footer" className="bg-surface-900 border-t border-surface-200">
+    <footer id="footer" className="bg-surface-900 border-t border-surface-800 mt-auto">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid sm:grid-cols-2 gap-8 items-start">
           <div>

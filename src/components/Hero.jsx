@@ -65,7 +65,7 @@ export default function Hero() {
               </div>
               <div className="flex-1 mx-8">
                 <div className="bg-surface-100 rounded-md px-3 py-1 text-xs text-surface-400 text-center max-w-xs mx-auto">
-                  app.fileonce.in/dashboard
+                  Your compliance dashboard
                 </div>
               </div>
             </div>

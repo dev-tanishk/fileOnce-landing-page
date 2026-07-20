@@ -3,7 +3,6 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { billingApi, signupApi } from '../api/signup';
 import { extractError } from '../api/client';
-import { APP_LOGIN_URL } from '../constants/app';
 import { cyclePricing, formatInr } from '../utils/pricing';
 
 const BILLING_CYCLES = [
@@ -201,9 +200,9 @@ export default function EarlyAccessPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-50">
+    <div className="min-h-screen bg-surface-50 flex flex-col">
       <Navbar />
-      <main className="pt-28 pb-16 sm:pt-32 sm:pb-24">
+      <main className="flex-1 w-full pt-28 pb-16 sm:pt-32 sm:pb-24">
         <div className="max-w-lg mx-auto px-4 sm:px-6 animate-early-access-card">
           <div className="bg-white rounded-2xl border border-surface-200 shadow-xl shadow-surface-200/40 p-6 sm:p-8">
             <div className="animate-fade-in-up opacity-0">
@@ -432,9 +431,16 @@ export default function EarlyAccessPage() {
                     </p>
                   )}
 
-                  <p className="text-sm text-surface-500 animate-fade-in-up opacity-0" style={{ animationDelay: '320ms' }}>
-                    We&apos;ll verify your payment manually and activate your account within 2 hours.
-                  </p>
+                  <div
+                    className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-left text-sm text-surface-700 animate-fade-in-up opacity-0"
+                    style={{ animationDelay: '320ms' }}
+                  >
+                    <p className="font-medium text-surface-900 mb-1">Sign-in details by email</p>
+                    <p>
+                      We&apos;ll verify your payment manually within 2 hours. Once approved, we&apos;ll email
+                      your sign-in details — you don&apos;t need to sign in until then.
+                    </p>
+                  </div>
 
                   <div className="flex gap-3 animate-fade-in-up opacity-0" style={{ animationDelay: '360ms' }}>
                     <SecondaryButton className="flex-1" disabled={loading} onClick={() => goToStep(2)}>
@@ -446,25 +452,13 @@ export default function EarlyAccessPage() {
                   </div>
 
                   <a
-                    href={APP_LOGIN_URL}
+                    href="/"
                     className="inline-block text-sm font-medium text-primary-600 hover:text-primary-700"
                   >
-                    Go to sign in
+                    Go back to home
                   </a>
                 </div>
               </StepPanel>
-            )}
-
-            {step < 3 && (
-              <p
-                className="text-sm text-center text-surface-500 mt-8 animate-fade-in-up opacity-0"
-                style={{ animationDelay: '400ms' }}
-              >
-                Already have an account?{' '}
-                <a href={APP_LOGIN_URL} className="text-primary-600 hover:text-primary-700 font-medium">
-                  Sign in
-                </a>
-              </p>
             )}
           </div>
         </div>
