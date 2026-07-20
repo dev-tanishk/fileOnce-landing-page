@@ -413,9 +413,22 @@ export default function EarlyAccessPage() {
                     <ol className="space-y-1.5 list-decimal list-inside text-surface-600">
                       <li>Open the FileOnce payment email on your phone</li>
                       <li>Scan either QR code and pay the exact amount shown</li>
-                      <li>Follow the WhatsApp instructions in the email to send your payment screenshot</li>
+                      <li>Tap &quot;Upload payment screenshot&quot; in the email and submit your proof</li>
                     </ol>
                   </div>
+
+                  {signupOrder.proofUploadUrl && (
+                    <div
+                      className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-left text-sm text-surface-700 animate-fade-in-up opacity-0"
+                      style={{ animationDelay: '260ms' }}
+                    >
+                      <p className="font-medium text-surface-900 mb-1">Upload link</p>
+                      <p className="text-surface-600 break-all">{signupOrder.proofUploadUrl}</p>
+                      <p className="text-xs text-surface-500 mt-2">
+                        Also in your payment email — open on your phone after paying.
+                      </p>
+                    </div>
+                  )}
 
                   <div
                     className="rounded-xl border border-surface-200 bg-surface-50 px-4 py-3 text-left text-sm text-surface-600 animate-fade-in-up opacity-0"
