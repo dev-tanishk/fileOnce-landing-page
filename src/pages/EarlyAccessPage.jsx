@@ -417,19 +417,6 @@ export default function EarlyAccessPage() {
                     </ol>
                   </div>
 
-                  {signupOrder.proofUploadUrl && (
-                    <div
-                      className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-left text-sm text-surface-700 animate-fade-in-up opacity-0"
-                      style={{ animationDelay: '260ms' }}
-                    >
-                      <p className="font-medium text-surface-900 mb-1">Upload link</p>
-                      <p className="text-surface-600 break-all">{signupOrder.proofUploadUrl}</p>
-                      <p className="text-xs text-surface-500 mt-2">
-                        Also in your payment email — open on your phone after paying.
-                      </p>
-                    </div>
-                  )}
-
                   <div
                     className="rounded-xl border border-surface-200 bg-surface-50 px-4 py-3 text-left text-sm text-surface-600 animate-fade-in-up opacity-0"
                     style={{ animationDelay: '280ms' }}
