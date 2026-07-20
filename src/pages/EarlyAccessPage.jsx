@@ -12,18 +12,11 @@ const BILLING_CYCLES = [
   { id: 'YEARLY', label: 'Yearly' },
 ];
 
-const PAYMENT_QR_PATHS = ['/payment-qr-1.png', '/payment-qr-2.png'];
-
-function resolveQrUrl(url, index = 0) {
-  const fallback = PAYMENT_QR_PATHS[index] ?? PAYMENT_QR_PATHS[0];
-  if (!url) return fallback;
-  if (url.startsWith('/')) return url;
-  try {
-    const parsed = new URL(url, window.location.origin);
-    return parsed.pathname || fallback;
-  } catch {
-    return fallback;
-  }
+function maskEmail(email) {
+  if (!email || !email.includes('@')) return email;
+  const [local, domain] = email.split('@');
+  if (local.length <= 1) return `*@${domain}`;
+  return `${local[0]}***@${domain}`;
 }
 
 function Spinner({ className = 'h-4 w-4', light }) {
@@ -144,27 +137,19 @@ export default function EarlyAccessPage() {
   });
   const [billingCycle, setBillingCycle] = useState('MONTHLY');
   const [earlyAccessPlan, setEarlyAccessPlan] = useState(null);
-  const [paymentConfig, setPaymentConfig] = useState(null);
   const [signupOrder, setSignupOrder] = useState(null);
-  const [paymentCompleted, setPaymentCompleted] = useState(null);
+  const [resendMessage, setResendMessage] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      billingApi.getPlans(),
-      billingApi.getConfig(),
-    ])
-      .then(([plansRes, configRes]) => {
-        const plans = plansRes.data || [];
+    billingApi.getPlans()
+      .then((res) => {
+        const plans = res.data || [];
         setEarlyAccessPlan(plans.find((p) => p.planType === 'EARLY_ACCESS') || plans[0] || null);
-        setPaymentConfig(configRes.data);
       })
-      .catch(() => {
-        setEarlyAccessPlan(null);
-        setPaymentConfig(null);
-      })
+      .catch(() => setEarlyAccessPlan(null))
       .finally(() => setDataLoading(false));
   }, []);
 
@@ -200,22 +185,20 @@ export default function EarlyAccessPage() {
     }
   };
 
-  const handlePaymentCompleted = async () => {
+  const handleResendEmail = async () => {
     if (!signupOrder?.signupToken) return;
     setError(null);
+    setResendMessage(null);
     setLoading(true);
     try {
       const res = await signupApi.markPaymentCompleted(signupOrder.signupToken);
-      setPaymentCompleted(res.data);
-      goToStep(4);
+      setResendMessage(res.data?.message || 'Payment email resent.');
     } catch (err) {
-      setError(extractError(err, 'Could not send upload link'));
+      setError(extractError(err, 'Could not resend payment email'));
     } finally {
       setLoading(false);
     }
   };
-
-  const progressStep = step === 4 ? 3 : step;
 
   return (
     <div className="min-h-screen bg-surface-50">
@@ -228,8 +211,7 @@ export default function EarlyAccessPage() {
               <p className="text-surface-500 text-sm mt-1 mb-6 transition-opacity duration-300">
                 {step === 1 && 'Step 1 of 3 — Your details'}
                 {step === 2 && 'Step 2 of 3 — Choose billing'}
-                {step === 3 && 'Step 3 of 3 — Pay on your phone'}
-                {step === 4 && 'Next step — Upload from your phone'}
+                {step === 3 && 'Step 3 of 3 — Pay from your email'}
               </p>
             </div>
 
@@ -238,7 +220,7 @@ export default function EarlyAccessPage() {
                 <div key={n} className="h-1.5 flex-1 rounded-full bg-surface-200 overflow-hidden">
                   <div
                     className={`h-full rounded-full bg-primary-600 transition-all duration-500 ease-out ${
-                      progressStep >= n ? 'w-full' : 'w-0'
+                      step >= n ? 'w-full' : 'w-0'
                     }`}
                   />
                 </div>
@@ -385,7 +367,7 @@ export default function EarlyAccessPage() {
                         disabled={dataLoading || !earlyAccessPlan}
                         onClick={handleStartPayment}
                       >
-                        {loading ? 'Preparing payment…' : 'Continue to payment'}
+                        {loading ? 'Sending email…' : 'Email me payment details'}
                       </PrimaryButton>
                     </div>
                   </div>
@@ -395,91 +377,6 @@ export default function EarlyAccessPage() {
 
             {step === 3 && signupOrder && (
               <StepPanel stepKey={3} direction={stepDirection}>
-                <div className="space-y-6">
-                  <div className="rounded-xl bg-surface-900 text-white px-4 py-4 text-center">
-                    <p className="text-xs uppercase tracking-wide text-surface-400">Amount to pay</p>
-                    {signupOrder.savingsPercent > 0 && signupOrder.compareAmountPaise && (
-                      <p className="text-sm text-surface-400 mt-2 line-through">
-                        {formatInr(signupOrder.compareAmountPaise)}
-                        {signupOrder.comparePlanName ? ` · ${signupOrder.comparePlanName}` : ''}
-                      </p>
-                    )}
-                    <p className="text-3xl font-bold mt-1">{formatInr(signupOrder.amountPaise)}</p>
-                    {signupOrder.savingsPercent > 0 && (
-                      <p className="text-sm text-emerald-400 font-medium mt-1">
-                        You save {signupOrder.savingsPercent}% on Early Access
-                      </p>
-                    )}
-                    <p className="text-sm text-surface-400 mt-1">
-                      {signupOrder.planName} · {signupOrder.billingCycle}
-                    </p>
-                  </div>
-
-                  {paymentConfig?.paymentInstructions && (
-                    <p className="text-sm text-surface-600 leading-relaxed">
-                      {paymentConfig.paymentInstructions}
-                    </p>
-                  )}
-
-                  {paymentConfig?.paymentQrCodes?.length > 0 && (
-                    <>
-                      <p className="text-sm font-medium text-surface-800 text-center bg-primary-50 border border-primary-100 rounded-xl px-4 py-3">
-                        Pay on either of the QR codes below — both accept the same payment amount.
-                      </p>
-                      <div className="grid grid-cols-2 gap-3">
-                        {paymentConfig.paymentQrCodes.map((qr, index) => (
-                          <div
-                            key={qr.label + index}
-                            className="rounded-xl border border-surface-200 bg-surface-50 p-3 text-center animate-fade-in-up opacity-0"
-                            style={{ animationDelay: `${index * 100 + 100}ms` }}
-                          >
-                            <img
-                              src={resolveQrUrl(qr.imageUrl, index)}
-                              alt={qr.label || `Payment QR ${index + 1}`}
-                              className="w-full max-w-[180px] mx-auto rounded-md border border-surface-200 bg-white"
-                              onError={(e) => {
-                                e.currentTarget.onerror = null;
-                                e.currentTarget.src = PAYMENT_QR_PATHS[index] ?? PAYMENT_QR_PATHS[0];
-                              }}
-                            />
-                            <p className="text-xs font-medium text-surface-600 mt-2">{qr.label}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </>
-                  )}
-
-                  <div className="rounded-xl border border-surface-200 bg-surface-50 px-4 py-4 space-y-2 text-sm text-surface-600">
-                    <p className="font-medium text-surface-800">How this works</p>
-                    <ol className="list-decimal list-inside space-y-1.5">
-                      <li>Scan a QR code with your phone and complete the payment in your UPI app.</li>
-                      <li>Return here and click <strong>I&apos;ve completed the payment</strong>.</li>
-                      <li>We&apos;ll email you a link — open it on your phone to upload the screenshot.</li>
-                    </ol>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <SecondaryButton
-                      className="flex-1"
-                      disabled={loading}
-                      onClick={() => goToStep(2)}
-                    >
-                      Back
-                    </SecondaryButton>
-                    <PrimaryButton
-                      className="flex-[2]"
-                      loading={loading}
-                      onClick={handlePaymentCompleted}
-                    >
-                      {loading ? 'Sending link…' : "I've completed the payment"}
-                    </PrimaryButton>
-                  </div>
-                </div>
-              </StepPanel>
-            )}
-
-            {step === 4 && paymentCompleted && (
-              <StepPanel stepKey={4} direction={stepDirection}>
                 <div className="space-y-6 text-center">
                   <div className="w-16 h-16 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center animate-success-pop">
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -489,28 +386,50 @@ export default function EarlyAccessPage() {
                   <div className="animate-fade-in-up opacity-0" style={{ animationDelay: '120ms' }}>
                     <h2 className="text-xl font-bold text-surface-900">Check your email on your phone</h2>
                     <p className="mt-3 text-sm text-surface-600 leading-relaxed">
-                      We sent a secure upload link to{' '}
-                      <strong>{paymentCompleted.emailSentTo}</strong>.
+                      We sent payment QR codes and an upload link to{' '}
+                      <strong>{maskEmail(signupOrder.email || form.email)}</strong>.
                     </p>
-                    <p className="mt-2 text-sm text-surface-600 leading-relaxed">
-                      {paymentCompleted.message}
+                  </div>
+                  <div className="rounded-xl bg-surface-900 text-white px-4 py-4 text-center animate-fade-in-up opacity-0" style={{ animationDelay: '180ms' }}>
+                    <p className="text-xs uppercase tracking-wide text-surface-400">Amount to pay</p>
+                    {signupOrder.savingsPercent > 0 && signupOrder.compareAmountPaise && (
+                      <p className="text-sm text-surface-400 mt-2 line-through">
+                        {formatInr(signupOrder.compareAmountPaise)}
+                        {signupOrder.comparePlanName ? ` · ${signupOrder.comparePlanName}` : ''}
+                      </p>
+                    )}
+                    <p className="text-3xl font-bold mt-1">{formatInr(signupOrder.amountPaise)}</p>
+                    <p className="text-sm text-surface-400 mt-1">
+                      {signupOrder.planName} · {signupOrder.billingCycle}
                     </p>
                   </div>
                   <div
                     className="rounded-xl border border-primary-100 bg-primary-50 px-4 py-3 text-left text-sm text-surface-700 animate-fade-in-up opacity-0"
-                    style={{ animationDelay: '220ms' }}
+                    style={{ animationDelay: '240ms' }}
                   >
-                    <p className="font-medium text-surface-900 mb-1">What happens next</p>
-                    <ul className="space-y-1 list-disc list-inside text-surface-600">
-                      <li>Upload your payment screenshot from your phone</li>
-                      <li>We verify your payment (usually within 24 hours)</li>
-                      <li>You&apos;ll receive another email when your account is active</li>
-                    </ul>
+                    <p className="font-medium text-surface-900 mb-1">What to do on your phone</p>
+                    <ol className="space-y-1.5 list-decimal list-inside text-surface-600">
+                      <li>Open the email from FileOnce</li>
+                      <li>Scan a QR code and pay the exact amount shown</li>
+                      <li>Tap the upload button in the same email to submit your screenshot</li>
+                    </ol>
+                  </div>
+                  {resendMessage && (
+                    <p className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 animate-fade-in">
+                      {resendMessage}
+                    </p>
+                  )}
+                  <div className="flex gap-3 animate-fade-in-up opacity-0" style={{ animationDelay: '300ms' }}>
+                    <SecondaryButton className="flex-1" disabled={loading} onClick={() => goToStep(2)}>
+                      Back
+                    </SecondaryButton>
+                    <PrimaryButton className="flex-[2]" loading={loading} onClick={handleResendEmail}>
+                      {loading ? 'Resending…' : 'Resend payment email'}
+                    </PrimaryButton>
                   </div>
                   <a
                     href={APP_LOGIN_URL}
-                    className="inline-block text-sm font-medium text-primary-600 hover:text-primary-700 animate-fade-in-up opacity-0"
-                    style={{ animationDelay: '320ms' }}
+                    className="inline-block text-sm font-medium text-primary-600 hover:text-primary-700"
                   >
                     Go to sign in
                   </a>
@@ -518,7 +437,7 @@ export default function EarlyAccessPage() {
               </StepPanel>
             )}
 
-            {step < 4 && (
+            {step < 3 && (
               <p
                 className="text-sm text-center text-surface-500 mt-8 animate-fade-in-up opacity-0"
                 style={{ animationDelay: '400ms' }}
