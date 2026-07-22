@@ -20,10 +20,10 @@ export default function Hero() {
 
           {/* Headline */}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-surface-900 leading-tight tracking-tight animate-fade-in-up animation-delay-100">
-            The Compliance Operations Platform{' '}
+            Track Compliance Requests. Collect Documents.{' '}
             <br className="hidden sm:block" />
             <span className="bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-              Indian Firms Deserve.
+              Never Miss Deadlines.
             </span>
           </h1>
 
